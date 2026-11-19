@@ -116,29 +116,35 @@ def read_from_pyart_grid(Grid):
             % new_grid["time"].dt.strftime("%Y-%m-%dT%H:%M:%SZ").values[0]
         )
     new_grid.attrs["first_grid_name"] = first_grid_name
-    x = radar_latitude.pop("data").squeeze()
+    x = radar_latitude.pop("data")
+    assert (x == x[0]).all(), "Expect all radar scan originate from 1 point"
+    x=x.squeeze().item(0)
     new_grid["radar_latitude"] = xr.DataArray(
-        np.atleast_1d(x), dims=("nradar"), attrs=radar_latitude
+        np.atleast_1d(x), dims=("time"), attrs=radar_latitude
     )
-    x = radar_longitude.pop("data").squeeze()
+    x = radar_longitude.pop("data")
+    assert (x == x[0]).all(), "Expect all radar scan originate from 1 point"
+    x=x.squeeze().item(0)
     new_grid["radar_longitude"] = xr.DataArray(
-        np.atleast_1d(x), dims=("nradar"), attrs=radar_longitude
+        np.atleast_1d(x), dims=("time"), attrs=radar_longitude
     )
-    x = radar_altitude.pop("data").squeeze()
+    x = radar_altitude.pop("data")
+    assert (x == x[0]).all(), "Expect all radar scan originate from 1 point"
+    x=x.squeeze().item(0)
     new_grid["radar_altitude"] = xr.DataArray(
-        np.atleast_1d(x), dims=("nradar"), attrs=radar_altitude
+        np.atleast_1d(x), dims=("time"), attrs=radar_altitude
     )
     x = origin_latitude.pop("data").squeeze()
     new_grid["origin_latitude"] = xr.DataArray(
-        np.atleast_1d(x), dims=("nradar"), attrs=origin_latitude
+        np.atleast_1d(x), dims=("time"), attrs=origin_latitude
     )
     x = origin_longitude.pop("data").squeeze()
     new_grid["origin_longitude"] = xr.DataArray(
-        np.atleast_1d(x), dims=("nradar"), attrs=origin_longitude
+        np.atleast_1d(x), dims=("time"), attrs=origin_longitude
     )
     x = origin_altitude.pop("data").squeeze()
     new_grid["origin_altitude"] = xr.DataArray(
-        np.atleast_1d(x), dims=("nradar"), attrs=origin_altitude
+        np.atleast_1d(x), dims=("time"), attrs=origin_altitude
     )
     new_grid["point_x"] = xr.DataArray(
         _point_data_factory(new_grid, "x"), dims=("z", "y", "x")
